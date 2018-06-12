@@ -139,10 +139,16 @@ def upload(df, gfile="/New Spreadsheet", wks_name=None,
     # Addition of cell values
     cell_list = wks.range('%s%s:%s%d' % (
         first_col, first_row, last_col, last_idx))
-    for j, idx in enumerate(df.index):
+    for j, (_, row) in enumerate(df.iterrows()):
         for i, col in enumerate(df.columns.values):
-            if not pd.isnull(df[col][idx]):
-                cell_list[i + j * len(df.columns.values)].value = df[col][idx]
+            val = row[col]
+            if not pd.isnull(val):
+                cell_list[i + j * len(df.columns.values)].value = val
+
+    # for j, idx in enumerate(df.index):
+    #     for i, col in enumerate(df.columns.values):
+    #         if not pd.isnull(df[col][idx]):
+    #             cell_list[i + j * len(df.columns.values)].value = df[col][idx]
 
     wks.update_cells(cell_list)
     return wks
